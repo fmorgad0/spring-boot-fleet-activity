@@ -1,6 +1,6 @@
 package com.examples.springbootfleetactivity.model;
 
-import com.mongodb.lang.Nullable;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class FleetData {
 
     private String journeyPatternId;
 
-    private String timeFrame;
+    private LocalDate timeFrame;
 
     private Integer vehicleJourneyId;
 
@@ -52,7 +53,7 @@ public class FleetData {
     private Short atStop;
 
     public FleetData(ObjectId id, Long timestamp, Integer lineId, Integer direction,
-                     String journeyPatternId, String timeFrame, Integer vehicleJourneyId,
+                     String journeyPatternId, LocalDate timeFrame, Integer vehicleJourneyId,
                      String operator, Integer congestion, BigDecimal lon, BigDecimal lat,
                      Integer delay, Integer blockId, Integer vehicleId, String stopId, Short atStop) {
         this.id = id;

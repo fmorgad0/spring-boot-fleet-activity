@@ -2,29 +2,63 @@ package com.examples.springbootfleetactivity.controller;
 
 import com.examples.springbootfleetactivity.model.FleetData;
 import com.examples.springbootfleetactivity.repository.FleetDataRepository;
+import com.examples.springbootfleetactivity.service.FleetDataService;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/fleet")
 public class FleetController {
 
-    public FleetDataRepository fleetDataRepository;
+    private FleetDataService fleetDataService;
 
-    public FleetController(FleetDataRepository fleetDataRepository) {
-        this.fleetDataRepository = fleetDataRepository;
+    public FleetController(FleetDataService fleetDataService) {
+        this.fleetDataService = fleetDataService;
     }
 
-    @GetMapping("/getByJourneyPatternId/{id}")
-    public ResponseEntity<List<FleetData>> getDataByJourneyPatternId(@PathVariable(value = "id") int lineId) {
-        List<FleetData> fleetDataList = fleetDataRepository.findAllByLineId(lineId);
+    @GetMapping("/getRunningOperators")
+    public ResponseEntity<List<String>> getOperatorsBetweenTimeFrame(@RequestParam(value = "startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                                                                     @RequestParam(value = "endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime) {
+        List<String> fleetOperatorsList = fleetDataService.getOperatorsBetweenTimeFrame(startTime, endTime);
 
-        return ResponseEntity.ok().body(fleetDataList);
+        return ResponseEntity.ok().body(fleetOperatorsList);
+
+    }
+
+    @GetMapping("/getVehicleIds")
+    public ResponseEntity<List<Integer>> getVehicleIdsBetweenTimeFrameForOperator(@RequestParam(value = "startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                                                                  @RequestParam(value = "endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime,
+                                                                  @RequestParam(value = "operator") String operator) {
+        List<Integer> vehicleIdsList = fleetDataService.getVehicleIdsBetweenTimeFrameForOperator(startTime, endTime, operator);
+
+        return ResponseEntity.ok().body(vehicleIdsList);
+
+    }
+
+    @GetMapping("/getVehicleIdsAtStop")
+    public ResponseEntity<List<Integer>> getVehicleIdsAtStopBetweenTimeFrame(@RequestParam(value = "startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                                                                                  @RequestParam(value = "endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime,
+                                                                                  @RequestParam(value = "vehicleIds") List<Integer> vehicleIds) {
+        List<Integer> vehicleIdsList = fleetDataService.getVehicleIdsAtStopBetweenTimeFrame(startTime, endTime, vehicleIds);
+
+        return ResponseEntity.ok().body(vehicleIdsList);
+
+    }
+
+    @GetMapping("/getVehicleTracingData")
+    public ResponseEntity<List<FleetData>> getVehicleTracingData(@RequestParam(value = "startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                                                                             @RequestParam(value = "endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime,
+                                                                             @RequestParam(value = "vehicleId") Integer vehicleId) {
+        List<FleetData> vehicleIdsList = fleetDataService.getVehicleTraceDataBetweenTimeFrameForVehicleId(startTime, endTime, vehicleId);
+
+        return ResponseEntity.ok().body(vehicleIdsList);
 
     }
 
