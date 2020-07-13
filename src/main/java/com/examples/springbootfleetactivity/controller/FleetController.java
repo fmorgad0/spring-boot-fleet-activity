@@ -1,25 +1,21 @@
 package com.examples.springbootfleetactivity.controller;
 
 import com.examples.springbootfleetactivity.model.FleetData;
-import com.examples.springbootfleetactivity.repository.FleetDataRepository;
-import com.examples.springbootfleetactivity.service.FleetDataService;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import com.examples.springbootfleetactivity.service.FleetService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/fleet")
 public class FleetController {
 
-    private FleetDataService fleetDataService;
+    private FleetService fleetDataService;
 
-    public FleetController(FleetDataService fleetDataService) {
+    public FleetController(FleetService fleetDataService) {
         this.fleetDataService = fleetDataService;
     }
 

@@ -1,7 +1,7 @@
 package com.examples.springbootfleetactivity.service;
 
 import com.examples.springbootfleetactivity.model.FleetData;
-import com.examples.springbootfleetactivity.repository.FleetDataRepository;
+import com.examples.springbootfleetactivity.utils.FleetUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,14 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FleetDataService {
+public class FleetService {
 
-    private FleetDataRepository fleetDataRepository;
     private MongoTemplate mongoTemplate;
 
-    public FleetDataService(FleetDataRepository fleetDataRepository,
-                            MongoTemplate mongoTemplate) {
-        this.fleetDataRepository = fleetDataRepository;
+    public FleetService(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -34,7 +31,7 @@ public class FleetDataService {
     public List<String> getOperatorsBetweenTimeFrame(LocalDate startTime, LocalDate endTime) {
 
         Query query = new Query(Criteria
-                .where("timeFrame")
+                .where(FleetUtils.TIMEFRAME)
                     .gte(startTime)
                     .lte(endTime));
 
@@ -53,12 +50,12 @@ public class FleetDataService {
     public List<Integer> getVehicleIdsBetweenTimeFrameForOperator(LocalDate startTime, LocalDate endTime, String operator) {
 
         Query query = new Query(Criteria
-                .where("timeFrame")
+                .where(FleetUtils.TIMEFRAME)
                     .gte(startTime)
                     .lte(endTime)
                 .and("operator").is(operator));
 
-        return mongoTemplate.findDistinct(query, "vehicleId", FleetData.class, Integer.class);
+        return mongoTemplate.findDistinct(query, FleetUtils.VEHICLE_ID, FleetData.class, Integer.class);
 
     }
 
@@ -76,14 +73,16 @@ public class FleetDataService {
 
         for (Integer vehicleId : vehicleIds) {
             Query query = new Query(Criteria
-                    .where("timeFrame")
+                    .where(FleetUtils.TIMEFRAME)
                     .gte(startTime)
                     .lte(endTime)
-                    .and("vehicleId").is(vehicleId))
+                    .and(FleetUtils.VEHICLE_ID).is(vehicleId))
                     .limit(1)
                     .with(Sort.by(Sort.Direction.DESC, "timestamp"));
 
-            Short vehicleAtStop = mongoTemplate.findOne(query, FleetData.class).getAtStop();
+            FleetData fleetData = mongoTemplate.findOne(query, FleetData.class);
+
+            Short vehicleAtStop = fleetData != null ? fleetData.getAtStop() : null;
 
             if (vehicleAtStop != null && vehicleAtStop == 1) {
                 vehicleIdsAtStop.add(vehicleId);
@@ -106,10 +105,10 @@ public class FleetDataService {
     public List<FleetData> getVehicleTraceDataBetweenTimeFrameForVehicleId(LocalDate startTime, LocalDate endTime, Integer vehicleId) {
 
         Query query = new Query(Criteria
-                .where("timeFrame")
+                .where(FleetUtils.TIMEFRAME)
                 .gte(startTime)
                 .lte(endTime)
-                .and("vehicleId").is(vehicleId));
+                .and(FleetUtils.VEHICLE_ID).is(vehicleId));
 
         return mongoTemplate.find(query, FleetData.class);
 
