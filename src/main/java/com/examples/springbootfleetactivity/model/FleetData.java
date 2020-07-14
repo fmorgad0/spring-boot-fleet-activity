@@ -1,6 +1,7 @@
 package com.examples.springbootfleetactivity.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "fleetData")
 public class FleetData {
 
@@ -52,25 +53,4 @@ public class FleetData {
 
     private Short atStop;
 
-    public FleetData(ObjectId id, Long timestamp, Integer lineId, Integer direction,
-                     String journeyPatternId, LocalDate timeFrame, Integer vehicleJourneyId,
-                     String operator, Integer congestion, BigDecimal lon, BigDecimal lat,
-                     Integer delay, Integer blockId, Integer vehicleId, String stopId, Short atStop) {
-        this.id = id;
-        this.timestamp = timestamp;
-        this.lineId = lineId;
-        this.direction = direction;
-        this.journeyPatternId = journeyPatternId;
-        this.timeFrame = timeFrame;
-        this.vehicleJourneyId = vehicleJourneyId;
-        this.operator = operator;
-        this.congestion = congestion;
-        this.lon = lon;
-        this.lat = lat;
-        this.delay = delay;
-        this.blockId = blockId;
-        this.vehicleId = vehicleId;
-        this.stopId = stopId;
-        this.atStop = atStop;
-    }
 }
