@@ -1,4 +1,4 @@
-##### spring-boot-fleet-activity #####
+# spring-boot-fleet-activity #
 ## Sample project restAPI with spring-boot and mongoDB ##
 
 Needed tools:
@@ -9,7 +9,7 @@ Needed tools:
 ### MongoDB setup ###
 - Create a database named fleetDB
 - Navigate to $mongoDirectory\Server\4.2\bin and run the command below (change the directory of the csv file if needed)
-# mongoimport --type csv -d fleetDB -c fleetData --headerline --columnsHaveTypes --drop C:\projects\spring-boot-fleet-activity\database\siri.20130131.csv
+**mongoimport --type csv -d fleetDB -c fleetData --headerline --columnsHaveTypes --drop C:\projects\spring-boot-fleet-activity\database\siri.20130131.csv**
 
 ### Running the application ###
 - Installing the project: mvn clean install
