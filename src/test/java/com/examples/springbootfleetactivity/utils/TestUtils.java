@@ -18,7 +18,6 @@ public final class TestUtils {
             List<Document> documents = new ArrayList<>();
             Files.readAllLines(path).forEach(l -> documents.add(Document.parse(l)));
 
-            mongoTemplate.getCollection(collectionName).drop();
             mongoTemplate.getCollection(collectionName).insertMany(documents);
 
             System.out.println(documents.size() + " documents loaded for " + collectionName + " collection.");
